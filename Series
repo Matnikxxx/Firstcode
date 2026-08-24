@@ -1,0 +1,190 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Series {
+
+    // Stores all captured series
+    private ArrayList<SeriesModel> seriesList = new ArrayList<>();
+
+    private Scanner scanner = new Scanner(System.in);
+
+    // Capture a new series
+    public void CaptureSeries() {
+
+        System.out.println("\n--- Capture a New Series ---");
+
+        System.out.print("Enter the series ID: ");
+        String id = scanner.nextLine();
+
+        System.out.print("Enter the series name: ");
+        String name = scanner.nextLine();
+
+        String age = getValidAge();
+
+        System.out.print("Enter the number of episodes: ");
+        String episodes = scanner.nextLine();
+
+        SeriesModel newSeries =
+                new SeriesModel(id, name, age, episodes);
+
+        seriesList.add(newSeries);
+
+        System.out.println("\nSeries processed successfully!");
+    }
+
+    // Checks that the age is between 2 and 18
+    private String getValidAge() {
+
+        while (true) {
+
+            System.out.print("Enter the series age restriction: ");
+            String age = scanner.nextLine();
+
+            try {
+
+                int ageNumber = Integer.parseInt(age);
+
+                if (ageNumber >= 2 && ageNumber <= 18) {
+                    return age;
+                }
+
+                System.out.println(
+                        "You have entered an incorrect age!!!");
+
+            } catch (NumberFormatException e) {
+
+                System.out.println(
+                        "You have entered an incorrect age!!!");
+            }
+        }
+    }
+
+    // Search for a series
+    public SeriesModel SearchSeries(String id) {
+
+        for (SeriesModel series : seriesList) {
+
+            if (series.getSeriesId().equalsIgnoreCase(id)) {
+                return series;
+            }
+        }
+
+        return null;
+    }
+
+    // Search using user input
+    public void SearchSeries() {
+
+        System.out.print("\nEnter the series ID to search: ");
+        String id = scanner.nextLine();
+
+        SeriesModel series = SearchSeries(id);
+
+        if (series != null) {
+
+            System.out.println("\n" + series);
+
+        } else {
+
+            System.out.println(
+                    "Series with Series ID: " + id
+                    + " was not found!");
+        }
+    }
+
+    // Update a series
+    public void UpdateSeries() {
+
+        System.out.print("\nEnter the series ID to update: ");
+        String id = scanner.nextLine();
+
+        SeriesModel series = SearchSeries(id);
+
+        if (series == null) {
+
+            System.out.println(
+                    "Series with Series ID: " + id
+                    + " was not found!");
+
+            return;
+        }
+
+        System.out.print("Enter the new series name: ");
+        String name = scanner.nextLine();
+
+        String age = getValidAge();
+
+        System.out.print("Enter the new number of episodes: ");
+        String episodes = scanner.nextLine();
+
+        series.setSeriesName(name);
+        series.setSeriesAge(age);
+        series.setSeriesNumberOfEpisodes(episodes);
+
+        System.out.println("\nSeries updated successfully!");
+    }
+
+    // Delete a series
+    public void DeleteSeries() {
+
+        System.out.print("\nEnter the series ID to delete: ");
+        String id = scanner.nextLine();
+
+        SeriesModel series = SearchSeries(id);
+
+        if (series == null) {
+
+            System.out.println(
+                    "Series with Series ID: " + id
+                    + " was not found!");
+
+            return;
+        }
+
+        System.out.print(
+                "Are you sure you want to delete this series? (Y/N): ");
+
+        String answer = scanner.nextLine();
+
+        if (answer.equalsIgnoreCase("Y")) {
+
+            seriesList.remove(series);
+
+            System.out.println(
+                    "Series deleted successfully!");
+
+        } else {
+
+            System.out.println("Delete cancelled.");
+        }
+    }
+
+    // Display the series report
+    public void SeriesReport() {
+
+        System.out.println("\n========== SERIES REPORT ==========");
+
+        if (seriesList.isEmpty()) {
+
+            System.out.println("No series have been captured.");
+
+            return;
+        }
+
+        for (int i = 0; i < seriesList.size(); i++) {
+
+            System.out.println("\nSeries " + (i + 1));
+            System.out.println(seriesList.get(i));
+        }
+
+        System.out.println(
+                "\nTotal number of series: " + seriesList.size());
+    }
+
+    // Exit the application
+    public void ExitSeriesApplication() {
+
+        System.out.println(
+                "\nThank you for using the TV Series Management Application.");
+    }
+}
